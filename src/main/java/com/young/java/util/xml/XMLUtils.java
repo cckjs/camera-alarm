@@ -1,4 +1,4 @@
-package com.young.java.util;
+package com.young.java.util.xml;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -20,6 +20,6 @@ public class XMLUtils {
     }
 
     public <T> T fromXml(String xml,Class<T> clazz){
-        return (T)stream.fromXml(xml);
+        return (T) stream.fromXML(xml);
     }
 }

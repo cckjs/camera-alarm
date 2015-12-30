@@ -18,4 +18,8 @@ public class XMLUtils {
     public String toXml(Object obj){
        return stream.toXML(obj);
     }
+
+    public <T> T fromXml(String xml,Class<T> clazz){
+        return (T)stream.fromXml(xml);
+    }
 }

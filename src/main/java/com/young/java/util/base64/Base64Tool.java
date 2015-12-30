@@ -5,6 +5,7 @@ package com.young.java.util.base64;
  */
 public class Base64Tool {
     public static String encode(String line){
+        byte[] bytes = line.getBytes();
         return null;
     }
     public static void main(String[] args){

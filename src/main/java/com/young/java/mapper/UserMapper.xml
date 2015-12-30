@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.young.springlog.mapper.UserMapper">
+
+
+
+	<insert id="insertUser"
+		parameterType="com.young.springlog.mapper.UserDomain"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		sys_user(username,loginname,password)
+		values(#{userName},#{loginName},#{password});
+	</insert>
+
+	<update id="updateUserById"
+		parameterType="com.young.springlog.mapper.UserDomain">
+		update sys_user
+		<set>
+			<if test="userName!=null and '' != userName">
+				username=#{userName} ,
+			</if>
+
+			<if test="loginName!=null and '' != loginName">
+				loginname=#{loginName},
+			</if>
+
+			<if test="password!=null and '' != password">
+				password=#{password}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+
+
+	<select id="queryUserById" parameterType="java.lang.String"
+		resultType="com.young.springlog.mapper.UserDomain">
+		select id,username,loginname,password from sys_user where id=#{id}
+	</select>
+
+
+	<select id="queryUserList" parameterType="java.util.HashMap"
+		resultType="com.young.springlog.mapper.UserDomain">
+		select id,username,loginname,password from sys_user
+		limit #{pageNum},#{pageSize}
+	</select>
+
+	<delete id="deleteUserById" parameterType="java.lang.String">
+		delete from sys_user
+		where id=#{id}
+	</delete>
+
+	<select id="loginUser" parameterType="com.young.springlog.mapper.UserDomain"
+		resultType="com.young.springlog.mapper.UserDomain">
+		select id,username,loginname,password from sys_user where loginname=#{loginName} and password=#{password}
+	</select>
+	
+	<select id="queryUserListbySpacrName" parameterType="java.util.HashMap"
+		resultType="com.young.springlog.mapper.UserDomain">
+		select * from sys_user sy where sy.id in( select user_id from sys_user_space s,sys_space p where s.space_id=p.id and p.name=#{name}) limit #{pageNum},#{pageSize}
+	</select>
+	
+</mapper> 

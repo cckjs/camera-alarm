@@ -1,0 +1,18 @@
+<system>
+  <systemInfo>
+    <isapi>
+      <isapiPrefix>http://192.168.1.106</isapiPrefix>
+      <isapiUser>admin</isapiUser>
+      <isapiPassword>anft123456ANFT</isapiPassword>
+    </isapi>
+    <alarmCenter>
+      <httpNotificationUrl>/camera-alarm/alarm</httpNotificationUrl>
+      <httpNotificationId>1</httpNotificationId>
+      <httpNotificationIp>localhost</httpNotificationIp>
+      <httpNotificationPort>8080</httpNotificationPort>
+    </alarmCenter>
+    <platForm>
+      <pushUrl>http://localhost:8080/test</pushUrl>
+    </platForm>
+  </systemInfo>
+</system>

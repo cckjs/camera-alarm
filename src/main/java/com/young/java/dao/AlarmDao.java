@@ -67,11 +67,24 @@ public class AlarmDao extends BaseDao {
         list.setVersion("2.0");
         list.setXmlns("http://www.isapi.org/ver20/XMLSchema");
         List<EventTriggerNotification> notifications = new ArrayList<EventTriggerNotification>();
+        
+        
+        EventTriggerNotification outputNotification = new EventTriggerNotification();
+        outputNotification.setId(""+inputPort.getId());
+        outputNotification.setNotificationMethod("IO");
+        outputNotification.setNotificationRecurrence("beginning");
+        outputNotification.setOutputIOPortID("1");
+        
+       
+        
         EventTriggerNotification notification = new EventTriggerNotification();
-        notification.setId("IO-" + inputPort.getId());
+        notification.setId(""+inputPort.getId());
         notification.setNotificationMethod("HTTP");
-        notification.setNotificationRecurrence("beginning");
+        //notification.setNotificationRecurrence("beginning");
+       // notification.setOutputIOPortID("1");
+        notifications.add(outputNotification);
         notifications.add(notification);
+        
         list.setLists(notifications);
         eventTrigger.setEventTriggerNotificationList(list);
         return eventTrigger;

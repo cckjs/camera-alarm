@@ -76,13 +76,13 @@ public class HttpClientUtils {
 	}
 
 	private Response sendRequest(HttpUriRequest request, Map<String, String> params, String auth) throws IOException {
-		HttpResponse res = httpClient.execute(request);
 		request.addHeader("Authorization", auth);
 		if (params != null) {
 			for (Map.Entry<String, String> entry : params.entrySet()) {
 				request.addHeader(entry.getKey(), entry.getValue());
 			}
 		}
+		HttpResponse res = httpClient.execute(request);
 		Response response = new Response();
 		response.setCode(res.getStatusLine().getStatusCode());
 		response.setMessage(res.getStatusLine().getReasonPhrase());

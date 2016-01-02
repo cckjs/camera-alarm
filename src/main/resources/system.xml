@@ -8,7 +8,7 @@
     <alarmCenter>
       <httpNotificationUrl>/camera-alarm/alarm</httpNotificationUrl>
       <httpNotificationId>1</httpNotificationId>
-      <httpNotificationIp>localhost</httpNotificationIp>
+      <httpNotificationIp>192.168.1.110</httpNotificationIp>
       <httpNotificationPort>8080</httpNotificationPort>
     </alarmCenter>
     <platForm>

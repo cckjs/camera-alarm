@@ -14,6 +14,17 @@ public class PlatformInfo {
     @XStreamImplicit(itemFieldName = "pushUrl")
     private List<String> pushUrl;
 
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    private String contentType;
+
+
     public List<String> getPushUrl() {
         return pushUrl;
     }

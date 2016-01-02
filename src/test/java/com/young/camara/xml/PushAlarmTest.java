@@ -1,4 +1,4 @@
-package com.young.java.dao;
+package com.young.camara.xml;
 
 import com.young.java.domain.deviceinfo.DeviceInfo;
 import com.young.java.domain.deviceinfo.eventconfig.EventTrigger;
@@ -12,36 +12,38 @@ import com.young.java.domain.deviceinfo.iooutput.DeviceIOOutputPortPowerOnState;
 import com.young.java.domain.deviceinfo.notification.EventNotificationAlert;
 import com.young.java.domain.deviceinfo.notification.HttpHostNotification;
 import com.young.java.domain.deviceinfo.system.*;
-import com.young.java.util.base64.Base64Tool;
 import com.young.java.util.http.HttpClientUtils;
-import com.young.java.util.http.Response;
 import com.young.java.util.xml.XMLUtils;
 import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
 
 /**
- * Created by dell on 2015/12/31.
+ * Created by Administrator on 2016/1/2.
  */
-public class BaseDao {
+public class PushAlarmTest {
 
-    protected HttpClientUtils isapi_client = new HttpClientUtils(ContentType.create("application/xml", "utf-8"));
-
-    protected HttpClientUtils push_platform_client;
-
-    protected XMLUtils xml = new XMLUtils(new Class[]{EventTrigger.class, EventTriggerNotification.class,
+    protected static XMLUtils xml = new XMLUtils(new Class[]{EventTrigger.class, EventTriggerNotification.class,
             EventTriggerNotificationList.class, DeviceIOInputPort.class, DeviceIOInputPortList.class,
             DeviceIOOutputPort.class, DeviceIOOutputPortList.class, DeviceIOOutputPortPowerOnState.class,
             EventNotificationAlert.class, HttpHostNotification.class, AlarmCenterInfo.class,ISAPIConfig.class,
             PlatformInfo.class, SystemConfig.class, SystemConfigInfo.class, DeviceInfo.class});
 
-    protected String getAuth(ISAPIConfig ISAPI){
-        return "Basic "+ Base64Tool.encode(ISAPI.getIsapiUser()+":"+ISAPI.getIsapiPassword());
-    }
+    public static void main(String[] args) throws IOException {
+        HttpClientUtils client = new HttpClientUtils(ContentType.create("application/xml", "utf-8"));
+        EventNotificationAlert alert = new EventNotificationAlert();
+        alert.setActivePostCount("");
+        alert.setChannelID("1");
+        alert.setDateTime("2012-05-27T16:58:33");
+        alert.setEventDescription("motion detection alarm");
+        alert.setEventState("active");
+        alert.setEventType("VMD");
+        alert.setIpAddress("172.8.6.175");
+        alert.setMacAddress("00:40:48:64:10:fa");
+        alert.setProtocolType("HTTP");
+        alert.setVersion("2.0");
+        alert.setXmlns("http://www.isapi.org/ver20/XMLSchema");
 
-    protected  <T> T getResources(String resourceUrl,Class<T> tClass,String auth) throws IOException {
-        Response res = isapi_client.get(resourceUrl, auth);
-        return xml.fromXml(res.getContent(),tClass);
+        client.post("http://localhost:8080/camera-alarm/alarm",null,xml.toXml(alert),"");
     }
-
 }

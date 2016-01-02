@@ -14,6 +14,7 @@ import com.young.java.domain.deviceinfo.system.SystemConfigInfo;
 import com.young.java.util.http.HttpClientUtils;
 import com.young.java.util.json.JsonUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.entity.ContentType;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -30,26 +31,26 @@ public class AlarmDao extends BaseDao {
     public DeviceInfo getDeviceInfos(SystemConfigInfo configInfo) throws IOException {
         String url = configInfo.getIsapi().getIsapiPrefix() + "/ISAPI/System/deviceInfo";
         String auth = getAuth(configInfo.getIsapi());
-        return getResources(url, DeviceInfo.class,auth);
+        return getResources(url, DeviceInfo.class, auth);
     }
 
     public DeviceIOInputPortList getDeviceIOInputPortList(SystemConfigInfo configInfo) throws IOException {
         String url = configInfo.getIsapi().getIsapiPrefix() + "/ISAPI/System/IO/inputs";
         String auth = getAuth(configInfo.getIsapi());
-        return getResources(url, DeviceIOInputPortList.class,auth);
+        return getResources(url, DeviceIOInputPortList.class, auth);
     }
 
     public DeviceIOOutputPortList getDeviceIOOutputPortList(SystemConfigInfo configInfo) throws IOException {
         String url = configInfo.getIsapi().getIsapiPrefix() + "/ISAPI/System/IO/outputs";
         String auth = getAuth(configInfo.getIsapi());
-        return getResources(url, DeviceIOOutputPortList.class,auth);
+        return getResources(url, DeviceIOOutputPortList.class, auth);
     }
 
-    public void setIOInputPortEventConfig(SystemConfigInfo configInfo,DeviceIOInputPort inputPort) throws IOException {
+    public void setIOInputPortEventConfig(SystemConfigInfo configInfo, DeviceIOInputPort inputPort) throws IOException {
         String url = configInfo.getIsapi().getIsapiPrefix() + "/ISAPI/Event/triggers/IO-" + inputPort.getId();
         EventTrigger eventTrigger = getEventTrigger(inputPort);
         String auth = getAuth(configInfo.getIsapi());
-        HttpClientUtils.put(url,null,xml.toXml(eventTrigger),auth);
+        isapi_client.put(url, null, xml.toXml(eventTrigger), auth);
     }
 
     private EventTrigger getEventTrigger(DeviceIOInputPort inputPort) {
@@ -77,18 +78,37 @@ public class AlarmDao extends BaseDao {
 
     }
 
-    public void setNotificationConfig(SystemConfigInfo configInfo,HttpHostNotification notificationConfig) throws IOException {
+    public void setNotificationConfig(SystemConfigInfo configInfo, HttpHostNotification notificationConfig) throws IOException {
         String url = configInfo.getIsapi().getIsapiPrefix() + "/ISAPI/Event/notification/httpHosts/" + configInfo.getAlarmCenter().getHttpNotificationId();
         String auth = getAuth(configInfo.getIsapi());
-        HttpClientUtils.put(url, null, xml.toXml(notificationConfig), auth);
+        isapi_client.put(url, null, xml.toXml(notificationConfig), auth);
     }
 
     public SystemConfig getSystemConfig(InputStream input) throws IOException {
-        String xmlString = IOUtils.toString(input,"utf-8");
-        return xml.fromXml(xmlString,SystemConfig.class);
+        String xmlString = IOUtils.toString(input, "utf-8");
+        return xml.fromXml(xmlString, SystemConfig.class);
     }
 
-    public void pushAlarm(EventNotificationAlert alarm,String pushUrl) throws IOException {
-        HttpClientUtils.post(pushUrl,null, JsonUtils.toJson(alarm),"");
+    public void pushAlarm(EventNotificationAlert alarm, String pushUrl, String type, String auth) throws IOException {
+        if ("xml".equals(type)) {
+            getPushPlatformClient(type).post(pushUrl, null, xml.toXml(alarm), auth);
+        } else if ("json".equals("")) {
+            getPushPlatformClient(type).post(pushUrl, null, JsonUtils.toJson(alarm), auth);
+        } else {
+            getPushPlatformClient(type).post(pushUrl, null, JsonUtils.toJson(alarm), auth);
+        }
+    }
+
+    private HttpClientUtils getPushPlatformClient(String type) {
+        if (push_platform_client == null) {
+            if ("xml".equals(type)) {
+                push_platform_client = new HttpClientUtils(ContentType.create("application/xml", "utf-8"));
+            } else if ("json".equals(type)) {
+                push_platform_client = new HttpClientUtils(ContentType.create("application/json", "utf-8"));
+            } else {
+                push_platform_client = new HttpClientUtils(ContentType.create("application/json", "utf-8"));
+            }
+        }
+        return push_platform_client;
     }
 }

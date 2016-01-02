@@ -12,7 +12,8 @@
       <httpNotificationPort>8080</httpNotificationPort>
     </alarmCenter>
     <platForm>
-      <pushUrl>http://localhost:8080/test</pushUrl>
+      <pushUrl>http://localhost:8080/camera-alarm/alarm/test</pushUrl>
+      <contentType>xml</contentType>
     </platForm>
   </systemInfo>
 </system>

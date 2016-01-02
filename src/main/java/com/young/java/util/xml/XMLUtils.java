@@ -1,5 +1,10 @@
 package com.young.java.util.xml;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
+
 import com.thoughtworks.xstream.XStream;
 
 /**
@@ -21,5 +26,9 @@ public class XMLUtils {
 
     public <T> T fromXml(String xml,Class<T> clazz){
         return (T) stream.fromXML(xml);
+    }
+    
+    public <T> T fromXml(InputStream input,Class<T> clazz) throws IOException{
+    	return fromXml(IOUtils.toString(input, "utf-8"),clazz);
     }
 }
